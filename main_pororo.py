@@ -26,12 +26,21 @@ from miscc.utils import mkdir_p
 from trainer import GANTrainer
 from inference import Infer
 
+def video_transform(video, image_transform):
+    vid = []
+    for im in video:
+        vid.append(image_transform(im))
+
+    vid = torch.stack(vid).permute(1, 0, 2, 3)
+
+    return vid
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a GAN network')
     parser.add_argument('--debug', default=False)
     parser.add_argument('--cfg', dest='cfg_file',
                         help='optional config file',
-                        default='/work/yunzhu032/StoryVisualize/cfg/final.yml', type=str)
+                        default='./cfg/final.yml', type=str)
     parser.add_argument('--load_ckpt', default=None, type=str)
     parser.add_argument('--continue_ckpt', default=None, type=str)
     parser.add_argument('--gpu',  dest='gpu_id', type=str, default='')
